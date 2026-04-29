@@ -6,14 +6,16 @@
 //
 
 import UIKit
+import CoreData
 
-class ViewControllerMain: UIViewController, IViewControllerMain {
+class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResultsControllerDelegate {
     
     var presenter: IPresenterMain!
     
     private let identifier = "ToDoCells"
     private let haptic = UINotificationFeedbackGenerator()
     
+    var fetchedResultsController: NSFetchedResultsController<ToDoEntity>! = nil
     private var todoList: [ToDo]{
         get {
             return presenter.todos
@@ -25,6 +27,16 @@ class ViewControllerMain: UIViewController, IViewControllerMain {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        do {
+            let fetchRequest = NSFetchRequest<ToDoEntity>()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "ToDoEntity", in: CoreDataStack.shared.viewContext)!
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.shared.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("Error performing fetch: \(error)")
+        }
         
         haptic.prepare()
         presenter = PresenterMain(view: self)
@@ -150,14 +162,17 @@ extension ViewControllerMain: UITableViewDataSource {
             return UITableViewCell()
         }
         
+        let todoEntity = fetchedResultsController.object(at: indexPath)
+        
         cell.selectionStyle = .none
-        cell.configure(with: todoList[indexPath.row])
+        cell.configure(with: todoEntity)
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        todoList.count
+        guard let sections = fetchedResultsController.sections else { return 0 }
+        return sections[section].numberOfObjects
     }
     
 }
