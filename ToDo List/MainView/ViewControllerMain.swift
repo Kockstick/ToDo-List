@@ -16,7 +16,7 @@ class ViewControllerMain: UIViewController, IViewControllerMain {
     
     private var todoList: [ToDo]{
         get {
-            return presenter.todoList
+            return presenter.todos
         }
     }
     
@@ -98,7 +98,7 @@ extension ViewControllerMain: UITableViewDelegate {
             return
         }
         
-        presenter.setCompletion(index: indexPath.row, value: !todoList[indexPath.row].completed)
+        presenter.didSelectTodo(index: indexPath.row)
         cell.setChecked(todoList[indexPath.row].completed)
         haptic.notificationOccurred(.success)
     }

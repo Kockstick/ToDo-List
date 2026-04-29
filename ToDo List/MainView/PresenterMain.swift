@@ -5,15 +5,15 @@
 //  Created by Diesperov Konstantin on 17.04.2026.
 //
 
-class PresenterMain: IPresenterMain{
+class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
     
     weak var viewController: IViewControllerMain?
     var interactor: IInteractorMain!
     var router: IRouterMain!
     
-    var todoList: [ToDo] {
-        get {
-            return interactor.todos
+    var todos: [ToDo] {
+        get{
+            interactor.repository.todos
         }
     }
     
@@ -27,12 +27,12 @@ class PresenterMain: IPresenterMain{
         
     }
     
-    func didSelectTodo(_ todo: ToDo) {
-        
+    func didSelectTodo(index: Int) {
+        interactor.setCompletion(index: index)
     }
     
     func editTodo(_ index: Int) {
-        router.showTodo(todo: interactor.todos[index])
+        router.showTodo(todo: todos[index])
     }
     
     func exportTodo(_ todo: ToDo) {
@@ -43,12 +43,16 @@ class PresenterMain: IPresenterMain{
         
     }
     
-    func setCompletion(index: Int, value: Bool){
-        interactor.setCompletion(index: index, value: value)
-    }
-    
     func refreshTableView() {
         viewController?.refreshTableView()
+    }
+    
+    func toDoDidUpdate(_ todos: [ToDo]) {
+        refreshTableView()
+    }
+    
+    func onLoadStateChange(_ loading: Bool) {
+        
     }
 }
 
@@ -56,14 +60,12 @@ protocol IPresenterMain: AnyObject {
     var viewController: IViewControllerMain? { get }
     var interactor: IInteractorMain! { get }
     var router: IRouterMain! { get }
-    
-    var todoList: [ToDo] { get }
+    var todos: [ToDo] { get }
     
     func viewDidLoad()
-    func didSelectTodo(_ todo: ToDo)
+    func didSelectTodo(index: Int)
     func editTodo(_ index: Int)
     func exportTodo(_ todo: ToDo)
     func deleteTodo(_ todo: ToDo)
-    func setCompletion(index: Int, value: Bool)
     func refreshTableView()
 }

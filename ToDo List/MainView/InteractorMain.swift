@@ -10,63 +10,32 @@ import Foundation
 class InteractorMain: IInteractorMain {
     
     weak var presenter: IPresenterMain?
+    var repository: IToDoRepository
     
-    var todos: [ToDo] = []
+    var todos: [ToDo] {
+        get {
+            repository.todos
+        }
+    }
     
     init(presenter: IPresenterMain?) {
         self.presenter = presenter
-        parseData() { error in
-            if let error {
-                print(error.localizedDescription)
-                return
-            }
-            
-            
-        }
+        repository = ToDoRepository.shared
+        repository.delegate = presenter as? ToDoRepositoryDelegate
     }
     
-    func setCompletion(index: Int, value: Bool) {
-        todos[index].completed = value
+    func setCompletion(index: Int) {
+        repository.todos[index].completed = !repository.todos[index].completed
     }
     
-    private func parseData(completion: @escaping (_ error: Error?) -> Void) {
-        Task{
-            do{
-                let data = try await downloadFile()
-                
-                let decoder = JSONDecoder()
-                let res = try decoder.decode(ToDosResponde.self, from: data)
-                
-                todos = res.todos
-                await MainActor.run{
-                    completion(nil)
-                    presenter?.refreshTableView()
-                }
-            } catch {
-                await MainActor.run{
-                    completion(error)
-                }
-            }
-        }
-    }
-    
-    private func downloadFile() async throws -> Data {
-        guard let url = URL(string: Bundle.main.apiURL) else {
-            throw NSError(domain: "app", code: 1, userInfo: [NSLocalizedDescriptionKey: "Empty URL"])
-        }
-        
-        let (data, responce) = try await URLSession.shared.data(from: url)
-        
-        guard let http = responce as? HTTPURLResponse, http.statusCode == 200 else {
-            throw URLError(.badServerResponse)
-        }
-        
-        return data
+    func getTodo(index: Int) -> ToDo? {
+        repository.todos[index]
     }
 }
 
 protocol IInteractorMain {
     var presenter: IPresenterMain? { get }
-    var todos: [ToDo] { get set }
-    func setCompletion(index: Int, value: Bool)
+    var repository: IToDoRepository { get }
+    func setCompletion(index: Int)
+    func getTodo(index: Int) -> ToDo?
 }
