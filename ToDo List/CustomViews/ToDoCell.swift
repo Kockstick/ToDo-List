@@ -99,6 +99,14 @@ class ToDoCell: UITableViewCell {
         setChecked(todo.completed)
     }
     
+    func configure(with todo: ToDoEntity){
+        titleView.text = todo.title ?? "Untitled"
+        todoView.text = todo.todo
+        dateView.text = todo.date?.formattedDate ?? Date.now.formattedDate
+        
+        setChecked(todo.completed)
+    }
+    
     func setChecked(_ completed: Bool){
         if completed {
             let attributed = NSAttributedString(
