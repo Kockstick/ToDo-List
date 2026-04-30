@@ -14,7 +14,7 @@ class RouterToDo: IRouterToDo {
         self.presenter = presenter
     }
     
-    static func build(todo: ToDo) -> UIViewController {
+    static func build(todo: ToDoEntity) -> UIViewController {
         let view = ViewControllerToDo()
         view.todo = todo
         return view

@@ -9,7 +9,7 @@ import UIKit
 
 class ViewControllerToDo: UIViewController, IViewControllerToDo {
     
-    var todo: ToDo! = nil
+    var todo: ToDoEntity! = nil
     
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
