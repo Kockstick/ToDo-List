@@ -11,14 +11,11 @@ class DataPreloader {
     static var shared = DataPreloader()
     
     private let PRELOAD_KEY = "isPreloaded"
-    private var _isPreloaded = false
-    private(set) var isPreloaded: Bool {
-        get {
-            return _isPreloaded
-        }
-        set {
-            savePreloadedFlag()
-            _isPreloaded = newValue
+    private(set) var isPreloaded: Bool = false {
+        didSet {
+            if isPreloaded {
+                savePreloadedFlag(newValue: isPreloaded)
+            }
         }
     }
     
@@ -51,8 +48,8 @@ class DataPreloader {
         return data
     }
     
-    private func savePreloadedFlag() {
-        UserDefaults.standard.set(isPreloaded, forKey: PRELOAD_KEY)
+    private func savePreloadedFlag(newValue: Bool) {
+        UserDefaults.standard.set(newValue, forKey: PRELOAD_KEY)
     }
     
     private func loadPreloadedFlag() {
