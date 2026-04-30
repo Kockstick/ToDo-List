@@ -41,26 +41,44 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
         return textView
     }()
     
+    lazy var titleField: UITextField = {
+        var textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.text = todo.title ?? "Untitled"
+        textField.font = .systemFont(ofSize: 34, weight: .bold)
+        return textField
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = todo.title ?? "Untitled"
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.largeTitleDisplayMode = .never
         navigationItem.backButtonTitle = "Назад"
         navigationController?.navigationBar.tintColor = .yellow
         
         view.backgroundColor = .systemBackground
         
         view.addSubview(scrollView)
+        scrollView.addSubview(titleField)
         scrollView.addSubview(dateView)
         scrollView.addSubview(textView)
         
+        setupConstraints()
+    }
+    
+    private func setupConstraints(){
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             
-            dateView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            titleField.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            titleField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            titleField.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            
+            dateView.topAnchor.constraint(equalTo: titleField.bottomAnchor, constant: 5),
             dateView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             dateView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             
@@ -75,6 +93,11 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .automatic
+        
+        todo.title = titleField.text ?? "Untitled"
         todo.todo = textView.text
         presenter?.save(todo)
     }
