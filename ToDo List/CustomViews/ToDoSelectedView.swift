@@ -82,4 +82,8 @@ class ToDoSelectedView: UIView{
     func configure(todo: ToDo?){
         self.configure(title: todo?.title ?? "Untitled", todo: todo?.todo ?? "", date: todo?.date?.formattedDate ?? Date.now.formattedDate)
     }
+    
+    func configure(todo: ToDoEntity?){
+        self.configure(title: todo?.title ?? "Untitled", todo: todo?.todo ?? "", date: todo?.date?.formattedDate ?? Date.now.formattedDate)
+    }
 }
