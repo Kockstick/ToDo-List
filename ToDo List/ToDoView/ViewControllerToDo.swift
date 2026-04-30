@@ -52,7 +52,6 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.backButtonTitle = "Назад"
         navigationController?.navigationBar.tintColor = .yellow
@@ -93,9 +92,6 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .automatic
         
         todo.title = titleField.text ?? "Untitled"
         todo.todo = textView.text

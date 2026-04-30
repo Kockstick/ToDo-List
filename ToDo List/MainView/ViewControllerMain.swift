@@ -60,7 +60,7 @@ class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResult
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Задачи"
-        //navigationItem.largeTitleDisplayMode = .always
+        navigationItem.largeTitleDisplayMode = .always
         navigationItem.searchController = searchController
     }
     
