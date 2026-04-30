@@ -13,8 +13,7 @@ class PresenterToDo: IPresenterToDo{
     
     init(view: IViewControllerToDo){
         viewController = view
-        interactor = InteractorToDo(presenter: self)
-        router = RouterToDo(presenter: self)
+        
     }
     
     func save(_ todo: ToDoEntity){
