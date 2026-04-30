@@ -85,6 +85,7 @@ class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResult
     
     private func confFooterView(){
         view.addSubview(footerView)
+        footerView.onChangeAmountTodo(fetchedResultsController.fetchedObjects?.count ?? 0)
         
         NSLayoutConstraint.activate([
             footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -96,7 +97,7 @@ class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResult
     }
 }
 
-//MARK: - Delegate
+//MARK: - TableView Delegate
 
 extension ViewControllerMain: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -170,6 +171,7 @@ extension ViewControllerMain {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         tabView.endUpdates()
+        footerView.onChangeAmountTodo(fetchedResultsController.fetchedObjects?.count ?? 0)
     }
 }
 
