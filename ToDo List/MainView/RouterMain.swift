@@ -31,16 +31,26 @@ class RouterMain: IRouterMain {
         return view
     }
     
-    func showTodo(todo: ToDoEntity){
-        let todoView = RouterToDo.build(todo: todo)
+    func editTodo(todo: ToDoEntity){
+        let todoView = RouterToDo.build(todo: todo) { _ in
+            let context = CoreDataStack.shared.viewContext
+            do{
+                try context.save()
+            } catch {
+                print("Error save todo: \(error.localizedDescription)")
+            }
+        }
+        
         if let view = presenter?.viewController as? UIViewController {
             view.navigationController?.pushViewController(todoView, animated: true)
         }
     }
+    
+    
 }
 
 protocol IRouterMain {
     var presenter: IPresenterMain? { get }
     
-    func showTodo(todo: ToDoEntity)
+    func editTodo(todo: ToDoEntity)
 }
