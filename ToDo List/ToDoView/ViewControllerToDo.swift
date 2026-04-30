@@ -9,6 +9,7 @@ import UIKit
 
 class ViewControllerToDo: UIViewController, IViewControllerToDo {
     
+    var presenter: IPresenterToDo! = nil
     var todo: ToDoEntity! = nil
     
     let scrollView: UIScrollView = {
@@ -71,6 +72,12 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
             textView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.frameLayoutGuide.heightAnchor, multiplier: 0.8),
         ])
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        todo.todo = textView.text
+        presenter?.save(todo)
+    }
 }
 
 extension ViewControllerToDo: UITextFieldDelegate {
@@ -81,5 +88,5 @@ extension ViewControllerToDo: UITextFieldDelegate {
 }
 
 protocol IViewControllerToDo: AnyObject {
-    
+    var presenter: IPresenterToDo! { get set }
 }

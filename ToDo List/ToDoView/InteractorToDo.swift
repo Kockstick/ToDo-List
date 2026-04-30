@@ -11,8 +11,18 @@ class InteractorToDo: IInteractorToDo {
     init(presenter: IPresenterToDo?) {
         self.presenter = presenter
     }
+    
+    func save(todo: ToDoEntity) {
+        let context = CoreDataStack.shared.viewContext
+        do{
+            try context.save()
+        } catch {
+            print("Error save todo: \(error.localizedDescription)")
+        }
+    }
 }
 
 protocol IInteractorToDo: AnyObject {
     var presenter: IPresenterToDo? { get }
+    func save(todo: ToDoEntity)
 }

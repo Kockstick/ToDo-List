@@ -16,10 +16,16 @@ class PresenterToDo: IPresenterToDo{
         interactor = InteractorToDo(presenter: self)
         router = RouterToDo(presenter: self)
     }
+    
+    func save(_ todo: ToDoEntity){
+        interactor.save(todo: todo)
+    }
 }
 
 protocol IPresenterToDo: AnyObject {
     var viewController: IViewControllerToDo? { get }
     var interactor: IInteractorToDo! { get }
     var router: IRouterToDo! { get }
+    
+    func save(_ todo: ToDoEntity)
 }
