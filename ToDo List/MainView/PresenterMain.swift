@@ -33,8 +33,10 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
         
     }
     
-    func deleteTodo(_ todo: ToDo) {
-        
+    func deleteTodo(_ todoEntity: ToDoEntity?) {
+        if let todoEntity = todoEntity {
+            interactor.deleteTodo(todo: todoEntity)
+        }
     }
     
     func onLoadStateChange(_ loading: Bool) {
@@ -51,5 +53,5 @@ protocol IPresenterMain: AnyObject {
     func didSelectTodo(todo: ToDoEntity)
     func editTodo(_ todoEntity: ToDoEntity?)
     func exportTodo(_ todo: ToDo)
-    func deleteTodo(_ todo: ToDo)
+    func deleteTodo(_ todoEntity: ToDoEntity?)
 }
