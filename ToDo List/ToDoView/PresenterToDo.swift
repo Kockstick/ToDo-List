@@ -10,6 +10,7 @@ class PresenterToDo: IPresenterToDo{
     weak var viewController: IViewControllerToDo?
     var interactor: IInteractorToDo!
     var router: IRouterToDo!
+    var completion: ((_ todo: ToDoEntity?) -> Void)?
     
     init(view: IViewControllerToDo){
         viewController = view
@@ -17,7 +18,7 @@ class PresenterToDo: IPresenterToDo{
     }
     
     func save(_ todo: ToDoEntity){
-        interactor.save(todo: todo)
+        completion?(todo)
     }
 }
 
@@ -25,6 +26,7 @@ protocol IPresenterToDo: AnyObject {
     var viewController: IViewControllerToDo? { get }
     var interactor: IInteractorToDo! { get }
     var router: IRouterToDo! { get }
+    var completion: ((_ todo: ToDoEntity?) -> Void)? { get set }
     
     func save(_ todo: ToDoEntity)
 }

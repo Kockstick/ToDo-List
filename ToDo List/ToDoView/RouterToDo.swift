@@ -14,7 +14,7 @@ class RouterToDo: IRouterToDo {
         self.presenter = presenter
     }
     
-    static func build(todo: ToDoEntity) -> UIViewController {
+    static func build(todo: ToDoEntity, completion: ((_ todo: ToDoEntity?) -> Void)? = nil) -> UIViewController {
         let view = ViewControllerToDo()
         let presenter = PresenterToDo(view: view)
         let interactor = InteractorToDo(presenter: presenter)
@@ -24,7 +24,9 @@ class RouterToDo: IRouterToDo {
         presenter.router = router
         view.presenter = presenter
         
+        presenter.completion = completion
         view.todo = todo
+        
         return view
     }
 }
