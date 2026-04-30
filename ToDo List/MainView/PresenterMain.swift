@@ -25,7 +25,7 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
     
     func editTodo(_ todoEntity: ToDoEntity?) {
         if let todo = todoEntity {
-            router.showTodo(todo: todo)
+            router.editTodo(todo: todo)
         }
     }
     
