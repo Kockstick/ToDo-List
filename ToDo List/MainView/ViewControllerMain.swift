@@ -139,7 +139,8 @@ extension ViewControllerMain: UITableViewDelegate {
             let send = UIAction(title: "Поделиться", image: .export.withTintColor(.white)) { _ in
             }
             
-            let delete = UIAction(title: "Удалить", image: .trash, attributes: .destructive) { _ in
+            let delete = UIAction(title: "Удалить", image: .trash, attributes: .destructive) { [weak self] _ in
+                self?.presenter.deleteTodo(self?.fetchedResultsController.object(at: indexPath))
             }
             
             return UIMenu(title: "", children: [edit, send, delete])
