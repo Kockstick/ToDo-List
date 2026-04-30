@@ -11,28 +11,22 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
     var interactor: IInteractorMain!
     var router: IRouterMain!
     
-    var todos: [ToDo] {
-        get{
-            interactor.repository.todos
-        }
-    }
-    
     init(view: IViewControllerMain){
         viewController = view
-        interactor = InteractorMain(presenter: self)
-        router = RouterMain(presenter: self)
     }
     
     func viewDidLoad() {
         
     }
     
-    func didSelectTodo(index: Int) {
-        interactor.setCompletion(index: index)
+    func didSelectTodo(todo: ToDoEntity) {
+        interactor.setCompletion(todo: todo)
     }
     
-    func editTodo(_ index: Int) {
-        router.showTodo(todo: todos[index])
+    func editTodo(_ todoEntity: ToDoEntity?) {
+        if let todo = todoEntity {
+            router.showTodo(todo: todo)
+        }
     }
     
     func exportTodo(_ todo: ToDo) {
@@ -41,14 +35,6 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
     
     func deleteTodo(_ todo: ToDo) {
         
-    }
-    
-    func refreshTableView() {
-        viewController?.refreshTableView()
-    }
-    
-    func toDoDidUpdate(_ todos: [ToDo]) {
-        refreshTableView()
     }
     
     func onLoadStateChange(_ loading: Bool) {
@@ -60,12 +46,10 @@ protocol IPresenterMain: AnyObject {
     var viewController: IViewControllerMain? { get }
     var interactor: IInteractorMain! { get }
     var router: IRouterMain! { get }
-    var todos: [ToDo] { get }
     
     func viewDidLoad()
-    func didSelectTodo(index: Int)
-    func editTodo(_ index: Int)
+    func didSelectTodo(todo: ToDoEntity)
+    func editTodo(_ todoEntity: ToDoEntity?)
     func exportTodo(_ todo: ToDo)
     func deleteTodo(_ todo: ToDo)
-    func refreshTableView()
 }

@@ -16,11 +16,22 @@ class RouterMain: IRouterMain {
     }
     
     static func build() -> UIViewController {
+        let repository = ToDoRepository.shared
         let view = ViewControllerMain()
+        let presenter = PresenterMain(view: view)
+        let interactor = InteractorMain(presenter: presenter)
+        let router = RouterMain(presenter: presenter)
+        
+        repository.delegate = presenter
+        view.presenter = presenter
+        presenter.router = router
+        presenter.interactor = interactor
+        interactor.repository = repository
+        
         return view
     }
     
-    func showTodo(todo: ToDo){
+    func showTodo(todo: ToDoEntity){
         let todoView = RouterToDo.build(todo: todo)
         if let view = presenter?.viewController as? UIViewController {
             view.navigationController?.pushViewController(todoView, animated: true)
@@ -31,5 +42,5 @@ class RouterMain: IRouterMain {
 protocol IRouterMain {
     var presenter: IPresenterMain? { get }
     
-    func showTodo(todo: ToDo)
+    func showTodo(todo: ToDoEntity)
 }
