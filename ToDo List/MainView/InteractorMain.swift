@@ -17,7 +17,16 @@ class InteractorMain: IInteractorMain {
     }
     
     func setCompletion(todo: ToDoEntity) {
-        todo.completed = !todo.completed
+        let context = CoreDataStack.shared.viewContext
+        context.performAndWait {
+            todo.completed = !todo.completed
+            
+            do{
+                try context.save()
+            } catch {
+                print("Error change completion todo: \(error.localizedDescription)")
+            }
+        }
     }
     
     func deleteTodo(todo: ToDoEntity){
