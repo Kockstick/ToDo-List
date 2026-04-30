@@ -122,6 +122,9 @@ class ToDoCell: UITableViewCell {
         } else {
             let attributed = NSAttributedString(
                 string: titleView.text ?? "",
+                attributes: [
+                    .strikethroughStyle: 0
+                ]
             )
             
             titleView.attributedText = attributed
