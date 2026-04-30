@@ -19,10 +19,24 @@ class InteractorMain: IInteractorMain {
     func setCompletion(todo: ToDoEntity) {
         todo.completed = !todo.completed
     }
+    
+    func deleteTodo(todo: ToDoEntity){
+        let context = CoreDataStack.shared.viewContext
+        context.performAndWait {
+            context.delete(todo)
+            
+            do{
+                try context.save()
+            } catch {
+                print("Error delete entity: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 protocol IInteractorMain {
     var presenter: IPresenterMain? { get }
     var repository: IToDoRepository? { get }
     func setCompletion(todo: ToDoEntity)
+    func deleteTodo(todo: ToDoEntity)
 }
