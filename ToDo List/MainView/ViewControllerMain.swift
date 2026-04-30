@@ -11,39 +11,39 @@ import CoreData
 class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResultsControllerDelegate {
     
     var presenter: IPresenterMain!
+    var fetchedResultsController: NSFetchedResultsController<ToDoEntity>! = nil
     
     private let identifier = "ToDoCells"
     private let haptic = UINotificationFeedbackGenerator()
-    
-    var fetchedResultsController: NSFetchedResultsController<ToDoEntity>! = nil
-    private var todoList: [ToDo]{
-        get {
-            return presenter.todos
-        }
-    }
     
     private let tabView = UITableView()
     private let footerView = UIFooterView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        haptic.prepare()
         
+        initFRC()
+        confTitle()
+        confFooterView()
+        confTableView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        ToDoRepository.shared.preload()
+    }
+    
+    private func initFRC(){
         do {
             let fetchRequest = NSFetchRequest<ToDoEntity>()
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
             fetchRequest.entity = NSEntityDescription.entity(forEntityName: "ToDoEntity", in: CoreDataStack.shared.viewContext)!
             fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.shared.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            fetchedResultsController.delegate = self
             try fetchedResultsController.performFetch()
         } catch {
             print("Error performing fetch: \(error)")
         }
-        
-        haptic.prepare()
-        presenter = PresenterMain(view: self)
-        
-        confTitle()
-        confFooterView()
-        confTableView()
     }
 
     //MARK: - Configure views
@@ -94,12 +94,6 @@ class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResult
             footerView.heightAnchor.constraint(equalToConstant: 90),
         ])
     }
-    
-    func refreshTableView(){
-        DispatchQueue.main.async { [weak self] in
-            self?.tabView.reloadData()
-        }
-    }
 }
 
 //MARK: - Delegate
@@ -110,8 +104,8 @@ extension ViewControllerMain: UITableViewDelegate {
             return
         }
         
-        presenter.didSelectTodo(index: indexPath.row)
-        cell.setChecked(todoList[indexPath.row].completed)
+        presenter.didSelectTodo(todo: fetchedResultsController.object(at: indexPath))
+        cell.setChecked(fetchedResultsController.object(at: indexPath).completed)
         haptic.notificationOccurred(.success)
     }
     
@@ -122,7 +116,7 @@ extension ViewControllerMain: UITableViewDelegate {
         
         let vc = UIViewController()
         let todoSelected = ToDoSelectedView(size: CGSize(width: todo.frame.width, height: todo.frame.height))
-        todoSelected.configure(todo: todoList[indexPath.row])
+        todoSelected.configure(todo: fetchedResultsController.object(at: indexPath))
         
         vc.preferredContentSize = CGSize(width: todoSelected.frame.width, height: todoSelected.frame.height)
         vc.view.addSubview(todoSelected)
@@ -138,9 +132,8 @@ extension ViewControllerMain: UITableViewDelegate {
         
         return UIContextMenuConfiguration(identifier: nil, previewProvider: previewProvider, actionProvider: { _ in
             
-            let index = indexPath.row
             let edit = UIAction(title: "Редактировать", image: .edit.withTintColor(.white)) { [weak self] _ in
-                self?.presenter.editTodo(index)
+                self?.presenter.editTodo(self?.fetchedResultsController.object(at: indexPath))
             }
             
             let send = UIAction(title: "Поделиться", image: .export.withTintColor(.white)) { _ in
@@ -151,6 +144,31 @@ extension ViewControllerMain: UITableViewDelegate {
             
             return UIMenu(title: "", children: [edit, send, delete])
         })
+    }
+}
+
+//MARK: - FRC
+
+extension ViewControllerMain {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        tabView.beginUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            tabView.insertRows(at: [newIndexPath!], with: .fade)
+        case .delete:
+            tabView.deleteRows(at: [indexPath!], with: .fade)
+        case .update:
+            tabView.reloadRows(at: [indexPath!], with: .fade)
+        default:
+            break
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        tabView.endUpdates()
     }
 }
 
@@ -182,5 +200,4 @@ extension ViewControllerMain: UITableViewDataSource {
 
 protocol IViewControllerMain: AnyObject {
     var presenter: IPresenterMain! { get set }
-    func refreshTableView()
 }
