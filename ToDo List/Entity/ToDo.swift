@@ -14,6 +14,24 @@ struct ToDo: Codable {
     var userId: Int32
     var completed: Bool
     var date: Date? = Date.now
+    
+    init(id: Int32, title: String? = nil, todo: String, userId: Int32, completed: Bool, date: Date? = nil) {
+        self.id = id
+        self.title = title
+        self.todo = todo
+        self.userId = userId
+        self.completed = completed
+        self.date = date
+    }
+    
+    init(title: String, todo: String){
+        id = 0
+        self.title = title
+        self.todo = todo
+        userId = 0
+        completed = false
+        date = Date.now
+    }
 }
 
 extension Date{
