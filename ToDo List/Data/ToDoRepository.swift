@@ -57,7 +57,7 @@ class ToDoRepository: IToDoRepository {
             entity.id = todo.id
             entity.title = todo.title
             entity.todo = todo.todo
-            entity.date = todo.date
+            entity.date = todo.date ?? Date.now
             entity.userId = todo.userId
             entity.completed = false
 
