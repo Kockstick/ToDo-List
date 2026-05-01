@@ -14,11 +14,15 @@ extension ToDoEntity {
     }
     
     func update(from model: ToDo) {
-        id = model.id
         title = model.title
         todo = model.todo
         userId = model.userId
         completed = model.completed
         date = model.date
+    }
+    
+    func create(from model: ToDo) {
+        title = model.title
+        todo = model.todo
     }
 }
