@@ -10,7 +10,7 @@ import UIKit
 class ViewControllerToDo: UIViewController, IViewControllerToDo {
     
     var presenter: IPresenterToDo! = nil
-    var todo: ToDoEntity! = nil
+    var todo: ToDoEntity? = nil
     
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -27,14 +27,14 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14)
         label.textColor = UIColor.gray
-        label.text = todo.date?.formattedDate ?? Date.now.formattedDate
+        label.text = todo?.date?.formattedDate ?? Date.now.formattedDate
         return label
     }()
     
     lazy var textView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.text = todo.todo
+        textView.text = todo?.todo ?? ""
         textView.font = .systemFont(ofSize: 18)
         textView.textContainer.lineFragmentPadding = 0
         textView.isScrollEnabled = false
@@ -44,7 +44,7 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
     lazy var titleField: UITextField = {
         var textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.text = todo.title ?? "Untitled"
+        textField.text = todo?.title ?? "Untitled"
         textField.font = .systemFont(ofSize: 34, weight: .bold)
         return textField
     }()
@@ -93,9 +93,11 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        todo.title = titleField.text ?? "Untitled"
-        todo.todo = textView.text
-        presenter?.save(todo)
+        if todo != nil {
+            presenter?.save(title: titleField.text ?? "Untitled", todo: textView.text)
+        } else {
+            presenter?.createTodo(title: titleField.text ?? "Untitled", todo: textView.text)
+        }
     }
 }
 
