@@ -32,8 +32,12 @@ class RouterMain: IRouterMain {
     }
     
     func editTodo(todo: ToDoEntity){
-        let todoView = RouterToDo.build(todo: todo) { _ in
+        let todoView = RouterToDo.build(todo) { newTodo in
+            guard let newTodo = newTodo else { return }
+            
             let context = CoreDataStack.shared.viewContext
+            todo.update(from: newTodo)
+            
             do{
                 try context.save()
             } catch {
@@ -46,11 +50,31 @@ class RouterMain: IRouterMain {
         }
     }
     
-    
+    func createTodo() {
+        let todoView = RouterToDo.build(nil) { newTodo in
+            guard let newTodo = newTodo else { return }
+            
+            let context = CoreDataStack.shared.viewContext
+            let todo = ToDoEntity(context: context)
+            todo.create(from: newTodo)
+            
+            do{
+                try context.save()
+            } catch {
+                print("Error create todo: \(error.localizedDescription)")
+            }
+        }
+        
+        if let view = presenter?.viewController as? UIViewController {
+            view.navigationController?.pushViewController(todoView, animated: true)
+        }
+
+    }
 }
 
 protocol IRouterMain {
     var presenter: IPresenterMain? { get }
     
     func editTodo(todo: ToDoEntity)
+    func createTodo()
 }

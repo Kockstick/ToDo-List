@@ -39,6 +39,10 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
         }
     }
     
+    func createTodo() {
+        router.createTodo()
+    }
+    
     func onLoadStateChange(_ loading: Bool) {
         
     }
@@ -54,4 +58,5 @@ protocol IPresenterMain: AnyObject {
     func editTodo(_ todoEntity: ToDoEntity?)
     func exportTodo(_ todo: ToDo)
     func deleteTodo(_ todoEntity: ToDoEntity?)
+    func createTodo()
 }
