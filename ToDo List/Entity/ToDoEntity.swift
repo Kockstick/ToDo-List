@@ -24,5 +24,6 @@ extension ToDoEntity {
     func create(from model: ToDo) {
         title = model.title
         todo = model.todo
+        date = Date.now
     }
 }
