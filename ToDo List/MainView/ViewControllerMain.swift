@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResultsControllerDelegate {
+class ViewControllerMain: UIViewController, IViewControllerMain {
     
     var presenter: IPresenterMain!
     var fetchedResultsController: NSFetchedResultsController<ToDoEntity>! = nil
@@ -86,6 +86,7 @@ class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResult
     private func confFooterView(){
         view.addSubview(footerView)
         footerView.onChangeAmountTodo(fetchedResultsController.fetchedObjects?.count ?? 0)
+        footerView.delegate = self
         
         NSLayoutConstraint.activate([
             footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -94,6 +95,14 @@ class ViewControllerMain: UIViewController, IViewControllerMain, NSFetchedResult
             footerView.widthAnchor.constraint(equalToConstant: view.frame.width),
             footerView.heightAnchor.constraint(equalToConstant: 90),
         ])
+    }
+}
+
+//MARK: - Footer Delegate
+
+extension ViewControllerMain: IFooterViewDelegate{
+    func newTodoDidTap() {
+        presenter?.createTodo()
     }
 }
 
@@ -151,7 +160,7 @@ extension ViewControllerMain: UITableViewDelegate {
 
 //MARK: - FRC
 
-extension ViewControllerMain {
+extension ViewControllerMain: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         tabView.beginUpdates()
     }
@@ -163,7 +172,13 @@ extension ViewControllerMain {
         case .delete:
             tabView.deleteRows(at: [indexPath!], with: .fade)
         case .update:
-            tabView.reloadRows(at: [indexPath!], with: .fade)
+            if let indexPath = indexPath,
+                   let cell = tabView.cellForRow(at: indexPath) as? ToDoCell {
+                    let object = fetchedResultsController.object(at: indexPath)
+                    cell.configure(with: object)
+                }
+        case .move:
+            tabView.moveRow(at: indexPath!, to: newIndexPath!)
         default:
             break
         }
