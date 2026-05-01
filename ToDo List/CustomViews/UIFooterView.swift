@@ -9,6 +9,8 @@ import UIKit
 
 class UIFooterView: UIView{
     
+    var delegate: IFooterViewDelegate?
+    
     let labelAmount: UILabel = {
         let label = UILabel()
         label.text = "7"
@@ -45,6 +47,13 @@ class UIFooterView: UIView{
         return image
     }()
     
+    lazy var createBtn: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.addSubview(pencilView)
+        return btn
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -52,25 +61,40 @@ class UIFooterView: UIView{
         self.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(hStack)
         
-        self.addSubview(pencilView)
+        self.addSubview(createBtn)
         
-        NSLayoutConstraint.activate([
-            hStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 25),
-            hStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            hStack.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            
-            pencilView.topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
-            pencilView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
-            pencilView.widthAnchor.constraint(equalToConstant: pencilView.frame.width),
-            pencilView.heightAnchor.constraint(equalToConstant: pencilView.frame.height),
-        ])
+        createBtn.addAction(UIAction { [weak self] _ in
+            self?.delegate?.newTodoDidTap()
+        }, for: .touchUpInside)
+        
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setupConstraints(){
+        NSLayoutConstraint.activate([
+            hStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 25),
+            hStack.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            hStack.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            
+            createBtn.topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
+            createBtn.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
+            createBtn.widthAnchor.constraint(equalToConstant: pencilView.frame.width),
+            createBtn.heightAnchor.constraint(equalToConstant: pencilView.frame.height),
+            
+            pencilView.widthAnchor.constraint(equalToConstant: pencilView.frame.width),
+            pencilView.heightAnchor.constraint(equalToConstant: pencilView.frame.height),
+        ])
+    }
+    
     func onChangeAmountTodo(_ amount: Int) {
         labelAmount.text = "\(amount)"
     }
+}
+
+protocol IFooterViewDelegate: AnyObject {
+    func newTodoDidTap()
 }
