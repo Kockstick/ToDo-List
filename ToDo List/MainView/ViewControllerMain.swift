@@ -96,25 +96,6 @@ class ViewControllerMain: UIViewController, IViewControllerMain {
     }
 }
 
-//MARK: - Search Delegate
-
-extension ViewControllerMain: UISearchResultsUpdating{
-    func updateSearchResults(for searchController: UISearchController) {
-        do{
-            if let text = searchController.searchBar.text, !text.isEmpty {
-                fetchRequest.predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
-            } else {
-                fetchRequest.predicate = nil
-            }
-            
-            try fetchedResultsController.performFetch()
-            tabView.reloadData()
-        } catch {
-            print("Failed search: \(error.localizedDescription)")
-        }
-    }
-}
-
 //MARK: - Footer Delegate
 
 extension ViewControllerMain: IFooterViewDelegate{
