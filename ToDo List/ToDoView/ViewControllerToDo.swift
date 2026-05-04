@@ -10,7 +10,13 @@ import UIKit
 class ViewControllerToDo: UIViewController, IViewControllerToDo {
     
     var presenter: IPresenterToDo! = nil
+    var lastTitle: String? = nil
+    var lastTodo: String? = nil
     var todo: ToDoEntity? = nil
+    
+    var hasChanges: Bool {
+        return lastTitle != titleField.text || lastTodo != textView.text
+    }
     
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -35,6 +41,7 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.text = todo?.todo ?? ""
+        lastTodo = textView.text
         textView.font = .systemFont(ofSize: 18)
         textView.textContainer.lineFragmentPadding = 0
         textView.isScrollEnabled = false
@@ -45,6 +52,7 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
         var textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.text = todo?.title ?? "Untitled"
+        lastTitle = textField.text
         textField.font = .systemFont(ofSize: 34, weight: .bold)
         return textField
     }()
@@ -94,7 +102,10 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
         super.viewWillDisappear(animated)
         
         if todo != nil {
-            presenter?.save(title: titleField.text ?? "Untitled", todo: textView.text)
+            print(hasChanges)
+            if hasChanges {
+                presenter?.save(title: titleField.text ?? "Untitled", todo: textView.text)
+            }
         } else {
             presenter?.createTodo(title: titleField.text ?? "Untitled", todo: textView.text)
         }
