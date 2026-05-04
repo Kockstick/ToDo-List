@@ -11,7 +11,8 @@ import CoreData
 class ViewControllerMain: UIViewController, IViewControllerMain {
     
     var presenter: IPresenterMain!
-    var fetchedResultsController: NSFetchedResultsController<ToDoEntity>! = nil
+    var fetchedResultsController: NSFetchedResultsController<ToDoEntity>!
+    var fetchRequest: NSFetchRequest<ToDoEntity>!
     
     private let identifier = "ToDoCells"
     private let haptic = UINotificationFeedbackGenerator()
@@ -35,8 +36,8 @@ class ViewControllerMain: UIViewController, IViewControllerMain {
     
     private func initFRC(){
         do {
-            let fetchRequest = NSFetchRequest<ToDoEntity>()
-            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            fetchRequest = NSFetchRequest<ToDoEntity>()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
             fetchRequest.entity = NSEntityDescription.entity(forEntityName: "ToDoEntity", in: CoreDataStack.shared.viewContext)!
             fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.shared.viewContext, sectionNameKeyPath: nil, cacheName: nil)
             fetchedResultsController.delegate = self
@@ -53,10 +54,7 @@ class ViewControllerMain: UIViewController, IViewControllerMain {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search"
         searchController.searchBar.searchBarStyle = .minimal
-        
-        //let textField = searchController.searchBar.searchTextField
-        //textField.backgroundColor = .todoGray
-        
+        searchController.searchResultsUpdater = self
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Задачи"
@@ -95,6 +93,25 @@ class ViewControllerMain: UIViewController, IViewControllerMain {
             footerView.widthAnchor.constraint(equalToConstant: view.frame.width),
             footerView.heightAnchor.constraint(equalToConstant: 90),
         ])
+    }
+}
+
+//MARK: - Search Delegate
+
+extension ViewControllerMain: UISearchResultsUpdating{
+    func updateSearchResults(for searchController: UISearchController) {
+        do{
+            if let text = searchController.searchBar.text, !text.isEmpty {
+                fetchRequest.predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
+            } else {
+                fetchRequest.predicate = nil
+            }
+            
+            try fetchedResultsController.performFetch()
+            tabView.reloadData()
+        } catch {
+            print("Failed search: \(error.localizedDescription)")
+        }
     }
 }
 
