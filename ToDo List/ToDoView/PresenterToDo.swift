@@ -7,12 +7,12 @@
 
 class PresenterToDo: IPresenterToDo{
     
-    weak var viewController: IViewControllerToDo?
+    weak var viewController: IViewToDo?
     var interactor: IInteractorToDo!
     var router: IRouterToDo!
     var completion: ((_ todo: ToDo?) -> Void)?
     
-    init(view: IViewControllerToDo){
+    init(view: IViewToDo){
         viewController = view
         
     }
@@ -29,7 +29,7 @@ class PresenterToDo: IPresenterToDo{
 }
 
 protocol IPresenterToDo: AnyObject {
-    var viewController: IViewControllerToDo? { get }
+    var viewController: IViewToDo? { get }
     var interactor: IInteractorToDo! { get }
     var router: IRouterToDo! { get }
     var completion: ((_ todo: ToDo?) -> Void)? { get set }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewControllerToDo: UIViewController, IViewControllerToDo {
+class ViewToDo: UIViewController, IViewToDo {
     
     var presenter: IPresenterToDo! = nil
     var lastTitle: String? = nil
@@ -112,13 +112,13 @@ class ViewControllerToDo: UIViewController, IViewControllerToDo {
     }
 }
 
-extension ViewControllerToDo: UITextFieldDelegate {
+extension ViewToDo: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
 }
 
-protocol IViewControllerToDo: AnyObject {
+protocol IViewToDo: AnyObject {
     var presenter: IPresenterToDo! { get set }
 }
