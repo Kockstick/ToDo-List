@@ -17,7 +17,7 @@ class RouterMain: IRouterMain {
     
     static func build() -> UIViewController {
         let repository = ToDoRepository.shared
-        let view = ViewControllerMain()
+        let view = ViewMain()
         let presenter = PresenterMain(view: view)
         let interactor = InteractorMain(presenter: presenter)
         let router = RouterMain(presenter: presenter)

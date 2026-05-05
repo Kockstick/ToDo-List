@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class ViewControllerMain: UIViewController, IViewControllerMain {
+class ViewMain: UIViewController, IViewMain {
     
     var presenter: IPresenterMain!
     var fetchedResultsController: NSFetchedResultsController<ToDoEntity>!
@@ -98,7 +98,7 @@ class ViewControllerMain: UIViewController, IViewControllerMain {
 
 //MARK: - Footer Delegate
 
-extension ViewControllerMain: IFooterViewDelegate{
+extension ViewMain: IFooterViewDelegate{
     func newTodoDidTap() {
         presenter?.createTodo()
     }
@@ -106,6 +106,6 @@ extension ViewControllerMain: IFooterViewDelegate{
 
 //MARK: - VIPER protocol
 
-protocol IViewControllerMain: AnyObject {
+protocol IViewMain: AnyObject {
     var presenter: IPresenterMain! { get set }
 }

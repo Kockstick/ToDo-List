@@ -7,11 +7,11 @@
 
 class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
     
-    weak var viewController: IViewControllerMain?
+    weak var viewController: IViewMain?
     var interactor: IInteractorMain!
     var router: IRouterMain!
     
-    init(view: IViewControllerMain){
+    init(view: IViewMain){
         viewController = view
     }
     
@@ -49,7 +49,7 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
 }
 
 protocol IPresenterMain: AnyObject {
-    var viewController: IViewControllerMain? { get }
+    var viewController: IViewMain? { get }
     var interactor: IInteractorMain! { get }
     var router: IRouterMain! { get }
     

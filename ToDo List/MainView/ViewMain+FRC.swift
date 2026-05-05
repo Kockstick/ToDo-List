@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-extension ViewControllerMain: NSFetchedResultsControllerDelegate {
+extension ViewMain: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         tabView.beginUpdates()
     }
