@@ -17,7 +17,6 @@ class ToDoRepository: IToDoRepository {
     
     private(set) var loading = false {
         didSet{
-            print("Loading: \(loading)")
             delegate?.onLoadStateChange(loading)
         }
     }
@@ -33,7 +32,6 @@ class ToDoRepository: IToDoRepository {
     
     func preload() {
         guard !loading else { return }
-        print("Try preload data from API")
         Task{
             do {
                 loading = true
