@@ -49,7 +49,7 @@ class ToDoRepository: IToDoRepository {
         }
     }
     
-    func addToDo(todo: ToDo) {
+    func addToDo(todo: ToDoDTO) {
         CoreDataStack.shared.viewContext.performAndWait {
             let context = CoreDataStack.shared.viewContext
 

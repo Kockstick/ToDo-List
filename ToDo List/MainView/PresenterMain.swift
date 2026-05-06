@@ -29,15 +29,15 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
         }
     }
     
-    func updateTodo(_ entity: ToDoEntity, todo: ToDo){
+    func updateTodo(_ entity: ToDoEntity, todo: ToDoDTO){
         interactor.update(todo: entity, from: todo)
     }
     
-    func createTodo(from todo: ToDo) {
+    func createTodo(from todo: ToDoDTO) {
         interactor.create(from: todo)
     }
     
-    func exportTodo(_ todo: ToDo) {
+    func exportTodo(_ todo: ToDoDTO) {
         
     }
     
@@ -64,9 +64,9 @@ protocol IPresenterMain: AnyObject {
     func viewDidLoad()
     func didSelectTodo(todo: ToDoEntity)
     func editTodo(_ todoEntity: ToDoEntity?)
-    func updateTodo(_ entity: ToDoEntity, todo: ToDo)
-    func createTodo(from todo: ToDo)
-    func exportTodo(_ todo: ToDo)
+    func updateTodo(_ entity: ToDoEntity, todo: ToDoDTO)
+    func createTodo(from todo: ToDoDTO)
+    func exportTodo(_ todo: ToDoDTO)
     func deleteTodo(_ todoEntity: ToDoEntity?)
     func createTodo()
 }
