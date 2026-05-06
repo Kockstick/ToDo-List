@@ -79,7 +79,7 @@ class ToDoSelectedView: UIView{
         self.dateView.text = date
     }
     
-    func configure(todo: ToDo?){
+    func configure(todo: ToDoDTO?){
         self.configure(title: todo?.title ?? "Untitled", todo: todo?.todo ?? "", date: todo?.date?.formattedDate ?? Date.now.formattedDate)
     }
     

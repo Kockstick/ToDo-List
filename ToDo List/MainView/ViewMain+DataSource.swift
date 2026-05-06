@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-extension ViewControllerMain: UITableViewDataSource {
+extension ViewMain: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? ToDoCell else{
             return UITableViewCell()

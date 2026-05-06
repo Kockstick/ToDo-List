@@ -23,7 +23,7 @@ class DataPreloader {
         loadPreloadedFlag()
     }
     
-    func preloadDataIfNeeded() async throws -> [ToDo]? {
+    func preloadDataIfNeeded() async throws -> [ToDoDTO]? {
         if !isPreloaded {
             let data = try await downloadFile()
             let decoder = JSONDecoder()

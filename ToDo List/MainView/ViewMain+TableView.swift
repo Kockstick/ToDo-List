@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-extension ViewControllerMain: UITableViewDelegate {
+extension ViewMain: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? ToDoCell else{
             return

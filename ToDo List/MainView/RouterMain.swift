@@ -17,7 +17,7 @@ class RouterMain: IRouterMain {
     
     static func build() -> UIViewController {
         let repository = ToDoRepository.shared
-        let view = ViewControllerMain()
+        let view = ViewMain()
         let presenter = PresenterMain(view: view)
         let interactor = InteractorMain(presenter: presenter)
         let router = RouterMain(presenter: presenter)
@@ -32,16 +32,9 @@ class RouterMain: IRouterMain {
     }
     
     func editTodo(todo: ToDoEntity){
-        let todoView = RouterToDo.build(todo) { newTodo in
-            guard let newTodo = newTodo else { return }
-            
-            let context = CoreDataStack.shared.viewContext
-            todo.update(from: newTodo)
-            
-            do{
-                try context.save()
-            } catch {
-                print("Error save todo: \(error.localizedDescription)")
+        let todoView = RouterToDo.build(todo) { [weak self] newTodo in
+            if let newTodo = newTodo {
+                self?.presenter?.updateTodo(todo, todo: newTodo)
             }
         }
         
@@ -51,24 +44,15 @@ class RouterMain: IRouterMain {
     }
     
     func createTodo() {
-        let todoView = RouterToDo.build(nil) { newTodo in
-            guard let newTodo = newTodo else { return }
-            
-            let context = CoreDataStack.shared.viewContext
-            let todo = ToDoEntity(context: context)
-            todo.create(from: newTodo)
-            
-            do{
-                try context.save()
-            } catch {
-                print("Error create todo: \(error.localizedDescription)")
+        let todoView = RouterToDo.build(nil) { [weak self] newTodo in
+            if let newTodo = newTodo {
+                self?.presenter?.createTodo(from: newTodo)
             }
         }
         
         if let view = presenter?.viewController as? UIViewController {
             view.navigationController?.pushViewController(todoView, animated: true)
         }
-
     }
 }
 

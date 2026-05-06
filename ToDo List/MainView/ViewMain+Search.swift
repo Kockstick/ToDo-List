@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-extension ViewControllerMain: UISearchResultsUpdating{
+extension ViewMain: UISearchResultsUpdating{
     func updateSearchResults(for searchController: UISearchController) {
         do{
             if let text = searchController.searchBar.text, !text.isEmpty {

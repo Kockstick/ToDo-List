@@ -7,11 +7,11 @@
 
 class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
     
-    weak var viewController: IViewControllerMain?
+    weak var viewController: IViewMain?
     var interactor: IInteractorMain!
     var router: IRouterMain!
     
-    init(view: IViewControllerMain){
+    init(view: IViewMain){
         viewController = view
     }
     
@@ -29,7 +29,15 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
         }
     }
     
-    func exportTodo(_ todo: ToDo) {
+    func updateTodo(_ entity: ToDoEntity, todo: ToDoDTO){
+        interactor.update(todo: entity, from: todo)
+    }
+    
+    func createTodo(from todo: ToDoDTO) {
+        interactor.create(from: todo)
+    }
+    
+    func exportTodo(_ todo: ToDoDTO) {
         
     }
     
@@ -49,14 +57,16 @@ class PresenterMain: IPresenterMain, ToDoRepositoryDelegate{
 }
 
 protocol IPresenterMain: AnyObject {
-    var viewController: IViewControllerMain? { get }
+    var viewController: IViewMain? { get }
     var interactor: IInteractorMain! { get }
     var router: IRouterMain! { get }
     
     func viewDidLoad()
     func didSelectTodo(todo: ToDoEntity)
     func editTodo(_ todoEntity: ToDoEntity?)
-    func exportTodo(_ todo: ToDo)
+    func updateTodo(_ entity: ToDoEntity, todo: ToDoDTO)
+    func createTodo(from todo: ToDoDTO)
+    func exportTodo(_ todo: ToDoDTO)
     func deleteTodo(_ todoEntity: ToDoEntity?)
     func createTodo()
 }
