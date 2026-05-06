@@ -25,5 +25,6 @@ extension ToDoEntity {
         title = model.title
         todo = model.todo
         date = Date.now
+        completed = false
     }
 }
