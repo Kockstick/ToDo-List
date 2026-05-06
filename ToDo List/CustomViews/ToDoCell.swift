@@ -91,7 +91,7 @@ class ToDoCell: UITableViewCell {
         ])
     }
     
-    func configure(with todo: ToDo){
+    func configure(with todo: ToDoDTO){
         titleView.text = todo.title ?? "Untitled"
         todoView.text = todo.todo
         dateView.text = todo.date?.formattedDate ?? Date.now.formattedDate

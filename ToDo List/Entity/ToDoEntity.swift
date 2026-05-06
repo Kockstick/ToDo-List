@@ -9,11 +9,11 @@
 import Foundation
 
 extension ToDoEntity {
-    func toModel() -> ToDo {
-        ToDo(id: id, title: title, todo: todo ?? "", userId: userId, completed: completed, date: date)
+    func toModel() -> ToDoDTO {
+        ToDoDTO(id: id, title: title, todo: todo ?? "", userId: userId, completed: completed, date: date)
     }
     
-    func update(from model: ToDo) {
+    func update(from model: ToDoDTO) {
         title = model.title
         todo = model.todo
         userId = model.userId
@@ -21,7 +21,7 @@ extension ToDoEntity {
         date = model.date
     }
     
-    func create(from model: ToDo) {
+    func create(from model: ToDoDTO) {
         title = model.title
         todo = model.todo
         date = Date.now

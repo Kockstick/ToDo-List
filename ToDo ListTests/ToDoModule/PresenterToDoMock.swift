@@ -14,7 +14,7 @@ class PresenterToDoMock: IPresenterToDo{
     
     var router: IRouterToDo!
     
-    var completion: ((ToDo_List.ToDo?) -> Void)?
+    var completion: ((ToDo_List.ToDoDTO?) -> Void)?
     
     public var didSave = false
     public var didCreate = false

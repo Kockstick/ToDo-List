@@ -6,7 +6,7 @@
 //
 
 struct ToDosResponde: Codable{
-    let todos: [ToDo]
+    let todos: [ToDoDTO]
     let total: Int
     let skip: Int
     let limit: Int

@@ -42,7 +42,7 @@ class InteractorMain: IInteractorMain {
         }
     }
     
-    func update(todo entity: ToDoEntity, from todo: ToDo) {
+    func update(todo entity: ToDoEntity, from todo: ToDoDTO) {
         let context = CoreDataStack.shared.viewContext
         entity.update(from: todo)
         
@@ -53,7 +53,7 @@ class InteractorMain: IInteractorMain {
         }
     }
     
-    func create(from todo: ToDo){
+    func create(from todo: ToDoDTO){
         let context = CoreDataStack.shared.viewContext
         let entity = ToDoEntity(context: context)
         entity.create(from: todo)
@@ -71,6 +71,6 @@ protocol IInteractorMain {
     var repository: IToDoRepository? { get }
     func setCompletion(todo: ToDoEntity)
     func deleteTodo(todo: ToDoEntity)
-    func update(todo entity: ToDoEntity, from todo: ToDo)
-    func create(from todo: ToDo)
+    func update(todo entity: ToDoEntity, from todo: ToDoDTO)
+    func create(from todo: ToDoDTO)
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ToDo: Codable {
+struct ToDoDTO: Codable {
     var id: Int32
     var title: String?
     var todo: String
