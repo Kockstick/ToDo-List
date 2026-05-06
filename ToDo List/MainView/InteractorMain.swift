@@ -41,6 +41,29 @@ class InteractorMain: IInteractorMain {
             }
         }
     }
+    
+    func update(todo entity: ToDoEntity, from todo: ToDo) {
+        let context = CoreDataStack.shared.viewContext
+        entity.update(from: todo)
+        
+        do{
+            try context.save()
+        } catch {
+            print("Error save todo: \(error.localizedDescription)")
+        }
+    }
+    
+    func create(from todo: ToDo){
+        let context = CoreDataStack.shared.viewContext
+        let entity = ToDoEntity(context: context)
+        entity.create(from: todo)
+        
+        do{
+            try context.save()
+        } catch {
+            print("Error create todo: \(error.localizedDescription)")
+        }
+    }
 }
 
 protocol IInteractorMain {
@@ -48,4 +71,6 @@ protocol IInteractorMain {
     var repository: IToDoRepository? { get }
     func setCompletion(todo: ToDoEntity)
     func deleteTodo(todo: ToDoEntity)
+    func update(todo entity: ToDoEntity, from todo: ToDo)
+    func create(from todo: ToDo)
 }
